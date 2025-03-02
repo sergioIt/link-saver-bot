@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	// "github.com/joho/godotenv"
 	"link-saver-bot/clients/telegram"
 	event_consumer "link-saver-bot/consumer/event-consumer"
 	tgEvent "link-saver-bot/events/telegram"
@@ -10,12 +11,14 @@ import (
 )
 
 const (
-	tgBotHost   = "https://api.telegram.org"
+	tgBotHost   = "api.telegram.org"
 	storagePath = "storage"
 	batchSize   = 100
 )
 
 func main() {
+
+	//token: 7655555780:AAE3tTP1MwCXbbSdz7D_4FzPARkgb-LO4yY
 
 	// tgClient := telegram.New(tgBotHost, mustToken())
 
@@ -34,7 +37,9 @@ func main() {
 
 func mustToken() string {
 
-	token := flag.String("token-bot-token", "", "token to access telegram bot")
+	token := flag.String("tg-bot-token",
+		"",
+		"token to access telegram bot")
 
 	flag.Parse()
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"link-saver-bot/lib/e"
+	"log"
 	"net/http"
 	"net/url"
 	"path"
@@ -33,7 +34,7 @@ func generateBasePath(token string) string {
 // SendMessage sends message to telegram  https://core.telegram.org/bots/api#sendmessage
 func (client *Client) SendMessage(chatId int, text string) error {
 	query := url.Values{}
-	query.Add("chatId", strconv.Itoa(chatId))
+	query.Add("chat_id", strconv.Itoa(chatId))
 	query.Add("text", text)
 
 	_, err := client.doRequest("sendMessage", query)
@@ -68,7 +69,6 @@ func (client *Client) Updates(offset, limit int) ([]Updates, error) {
 }
 
 func (client *Client) doRequest(method string, query url.Values) (data []byte, err error) {
-
 	defer func() { err = e.Wrap("can't do request", err) }()
 
 	u := url.URL{
@@ -84,6 +84,8 @@ func (client *Client) doRequest(method string, query url.Values) (data []byte, e
 
 	request.URL.RawQuery = query.Encode()
 
+	log.Printf("Making request to: %s", request.URL.String())
+
 	response, err := client.client.Do(request)
 	if err != nil {
 		return nil, e.Wrap("can't do request", err)
@@ -95,6 +97,8 @@ func (client *Client) doRequest(method string, query url.Values) (data []byte, e
 	if err != nil {
 		return nil, e.Wrap("can't read response", err)
 	}
+
+	log.Printf("Response body: %s", string(body))
 
 	return body, nil
 }
