@@ -24,19 +24,6 @@ var (
 	errMetaNotFound     = errors.New("meta not found")
 )
 
-// const (
-// 	msgHelp = `I can save and keep your links. Also I can offer you them to read.
-
-// Available commands:
-// /help - show this help message
-// /start - show welcome message
-// /rnd - get a random link from your list`
-// 	msgHello         = "Hi there! 👋\n\n" + msgHelp
-// 	msgNoSavedPages  = "You have no saved pages 🙊"
-// 	msgSaved         = "Saved! 👌"
-// 	msgAlreadyExists = "You have already have this page in your list 🤗"
-// )
-
 func New(tgClient *telegram.Client, storage storage.Storage) *Processor {
 	return &Processor{
 		tgClient: tgClient,
@@ -44,10 +31,10 @@ func New(tgClient *telegram.Client, storage storage.Storage) *Processor {
 	}
 }
 
-func (p *Processor) Fetch(offset, limit int) ([]events.Event, error) {
-	updates, err := p.tgClient.Updates(offset, limit)
+func (p *Processor) Fetch(limit, offset int) ([]events.Event, error) {
+	updates, err := p.tgClient.Updates(limit, p.offset)
 	if err != nil {
-		return nil, e.Wrap("can't get events", err)
+		return nil, e.Wrap("can't get events, error: ", err)
 	}
 	// return empty result if no updates were fetched
 	if len(updates) == 0 {
