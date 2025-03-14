@@ -99,7 +99,7 @@ func makeEvent(update telegram.Updates) events.Event {
 
 	if updateType == events.Message {
 		res.Meta = Meta{
-			ChatId:   update.Message.Caht.ID,
+			ChatId:   update.Message.Chat.ID,
 			UserName: update.Message.From.UserName,
 		}
 	}
