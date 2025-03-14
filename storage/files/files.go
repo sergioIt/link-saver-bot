@@ -27,26 +27,29 @@ func (s Storage) Save(page *storage.Page) (err error) {
 
 	defer func() { err = e.Wrap("can't save page", err) }()
 
-	filePath := filepath.Join(s.basePath, page.UserName)
-
-	if err := os.MkdirAll(filePath, defaultPerm); err != nil {
+	// Create user directory
+	dirPath := filepath.Join(s.basePath, page.UserName)
+	if err := os.MkdirAll(dirPath, defaultPerm); err != nil {
 		return err
 	}
 
+	// Get hashed filename
 	fileName, err := fileName(page)
-
 	if err != nil {
 		return err
 	}
 
-	filePath = filepath.Join(filePath, fileName)
+	// Create the full file path
+	filePath := filepath.Join(dirPath, fileName)
 
-	file, err := os.Create(filepath.Join(filePath, page.URL))
+	// Create the file
+	file, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
+	// Encode and save the page
 	if err := gob.NewEncoder(file).Encode(page); err != nil {
 		return err
 	}
@@ -56,7 +59,7 @@ func (s Storage) Save(page *storage.Page) (err error) {
 
 func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 
-	defer func() { err = e.Wrap("can't pick random page", err) }()
+	//defer func() { err = e.Wrap("can't pick random page", err) }()
 
 	path := filepath.Join(s.basePath, userName)
 
