@@ -25,8 +25,6 @@ func New(basePath string) Storage {
 
 func (s Storage) Save(page *storage.Page) (err error) {
 
-	defer func() { err = e.Wrap("can't save page", err) }()
-
 	// Create user directory
 	dirPath := filepath.Join(s.basePath, page.UserName)
 	if err := os.MkdirAll(dirPath, defaultPerm); err != nil {

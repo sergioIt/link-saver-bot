@@ -98,8 +98,6 @@ func NewMessageSender(chatId int, tg *telegram.Client) func(string) error {
 
 func (p *Processor) sendRandom(chatID int, userName string) (err error) {
 
-	defer func() { err = e.Wrap("can't do send random command", err) }()
-
 	page, err := p.storage.PickRandom(userName)
 
 	if err != nil && !errors.Is(err, storage.ErrNoSavedPages) {
