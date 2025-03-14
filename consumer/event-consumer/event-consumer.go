@@ -21,20 +21,16 @@ func New(fetcher events.Fetcher, processor events.Processor, batchSize int) Cons
 }
 
 func (consumer Consumer) Start() error {
-
 	for {
-
 		eventsFetched, err := consumer.fetcher.Fetch(consumer.batchSize, 0)
 
 		if err != nil {
 			log.Printf("[ERROR] consumer: %s", err)
 			continue
-			//@todo implement retry logic at fetcher before we will have to skip this here
 		}
 
 		if len(eventsFetched) == 0 {
 			time.Sleep(1 * time.Second)
-
 			continue
 		}
 
@@ -42,7 +38,6 @@ func (consumer Consumer) Start() error {
 			log.Print(err)
 			continue
 		}
-
 	}
 }
 

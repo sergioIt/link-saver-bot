@@ -47,13 +47,11 @@ func (client *Client) SendMessage(chatId int, text string) error {
 }
 
 // Updates fetches updates from telegram
-func (client *Client) Updates(offset, limit int) ([]Updates, error) {
-
+func (client *Client) Updates(limit int, offset int) ([]Updates, error) {
 	query := url.Values{}
 	query.Add("offset", strconv.Itoa(offset))
 	query.Add("limit", strconv.Itoa(limit))
 
-	//@todo make "getUpdates" http request
 	data, err := client.doRequest("getUpdates", query)
 	if err != nil {
 		return nil, err

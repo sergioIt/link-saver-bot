@@ -57,7 +57,7 @@ func (p *Processor) savePage(chatID int, pageURL string, userName string) (err e
 		err = e.Wrap("can't do save page command", err)
 	}()
 
-	sendMessage := NewMessagSender(chatID, p.tgClient)
+	sendMessage := NewMessageSender(chatID, p.tgClient)
 
 	page := &storage.Page{
 		URL:      pageURL,
@@ -71,7 +71,10 @@ func (p *Processor) savePage(chatID int, pageURL string, userName string) (err e
 	}
 
 	if isExists {
-		sendMessage(msgAlreadyExists)
+		err := sendMessage(msgAlreadyExists)
+		if err != nil {
+			return err
+		}
 		// return p.tgClient.SendMessage(chatID, msgAlreadyExists)
 	}
 
@@ -86,7 +89,7 @@ func (p *Processor) savePage(chatID int, pageURL string, userName string) (err e
 	return nil
 }
 
-func NewMessagSender(chatId int, tg *telegram.Client) func(string) error {
+func NewMessageSender(chatId int, tg *telegram.Client) func(string) error {
 
 	return func(message string) error {
 		return tg.SendMessage(chatId, message)
