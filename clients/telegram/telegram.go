@@ -67,7 +67,6 @@ func (client *Client) Updates(limit int, offset int) ([]Updates, error) {
 }
 
 func (client *Client) doRequest(method string, query url.Values) (data []byte, err error) {
-	defer func() { err = e.Wrap("can't do request", err) }()
 
 	u := url.URL{
 		Scheme: "https",
