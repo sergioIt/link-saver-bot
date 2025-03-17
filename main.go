@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"link-saver-bot/clients/telegram"
 	event_consumer "link-saver-bot/consumer/event-consumer"
 	tgEvent "link-saver-bot/events/telegram"
 	"link-saver-bot/storage/files"
 	"log"
+	"os"
 )
 
 const (
@@ -17,12 +18,18 @@ const (
 )
 
 func main() {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	//token: 7655555780:AAE3tTP1MwCXbbSdz7D_4FzPARkgb-LO4yY
+	token := os.Getenv("TELEGRAM_TOKEN")
+	if token == "" {
+		log.Fatal("TELEGRAM_TOKEN not found in environment")
+	}
 
-	// tgClient := telegram.New(tgBotHost, mustToken())
-
-	eventProcessor := tgEvent.New(telegram.New(tgBotHost, mustToken()),
+	eventProcessor := tgEvent.New(
+		telegram.New(tgBotHost, token),
 		files.New(storagePath))
 
 	log.Print("service started")
@@ -32,7 +39,6 @@ func main() {
 	if err := consumer.Start(); err != nil {
 		log.Fatal()
 	}
-
 }
 
 func mustToken() string {
