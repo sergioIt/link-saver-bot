@@ -53,10 +53,6 @@ func isUrl(command string) bool {
 
 func (p *Processor) savePage(chatID int, pageURL string, userName string) (err error) {
 
-	defer func() {
-		err = e.Wrap("can't do save page command", err)
-	}()
-
 	sendMessage := NewMessageSender(chatID, p.tgClient)
 
 	page := &storage.Page{
