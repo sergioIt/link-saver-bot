@@ -1,5 +1,14 @@
-.DS_Store
-.idea/
+# Binary
 link-saver-bot
 link-saver-bot.exe
-.vscode
+main
+
+# User data
+user_data/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
