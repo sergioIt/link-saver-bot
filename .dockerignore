@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Build
+link-saver-bot
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# IDE
+.idea
+.vscode
+
+# User data
+user_data/
+
+# OS
+.DS_Store 
