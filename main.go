@@ -20,7 +20,7 @@ const (
 func main() {
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+		log.Printf("Warning: Error loading .env file: %v", err) // This is just a warning
 	}
 
 	token := os.Getenv("TELEGRAM_TOKEN")
