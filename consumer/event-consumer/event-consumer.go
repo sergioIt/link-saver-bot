@@ -2,7 +2,7 @@ package event_consumer
 
 import (
 	"link-saver-bot/clients/events"
-	"log"
+	"log/slog"
 	"time"
 )
 
@@ -13,6 +13,7 @@ type Consumer struct {
 }
 
 func New(fetcher events.Fetcher, processor events.Processor, batchSize int) Consumer {
+	slog.Info("Initializing event consumer", "batchSize", batchSize)
 	return Consumer{
 		fetcher:   fetcher,
 		processor: processor,
@@ -21,11 +22,14 @@ func New(fetcher events.Fetcher, processor events.Processor, batchSize int) Cons
 }
 
 func (consumer Consumer) Start() error {
+	slog.Info("Starting event consumer")
+
 	for {
 		eventsFetched, err := consumer.fetcher.Fetch(consumer.batchSize, 0)
-
 		if err != nil {
-			log.Printf("[ERROR] consumer: %s", err)
+			slog.Error("Failed to fetch events",
+				"batchSize", consumer.batchSize,
+				"error", err)
 			continue
 		}
 
@@ -34,8 +38,10 @@ func (consumer Consumer) Start() error {
 			continue
 		}
 
+		slog.Info("Fetched new events", "count", len(eventsFetched))
+
 		if err := consumer.handleEvents(eventsFetched); err != nil {
-			log.Print(err)
+			slog.Error("Failed to handle events", "error", err)
 			continue
 		}
 	}
@@ -53,15 +59,22 @@ func (consumer Consumer) Start() error {
     solutions: using sync.WaitGroup{}
 */
 func (consumer *Consumer) handleEvents(events []events.Event) error {
-
 	for _, event := range events {
-		log.Printf("got new event: %s", event.Text)
+		slog.Info("Processing event",
+			"text", event.Text,
+			"meta", event.Meta)
 
 		if err := consumer.processor.Process(event); err != nil {
-			log.Printf("error while handling event: %s", err.Error())
+			slog.Error("Failed to process event",
+				"text", event.Text,
+				"meta", event.Meta,
+				"error", err)
 			continue
 		}
 
+		slog.Debug("Event processed successfully",
+			"text", event.Text,
+			"meta", event.Meta)
 	}
 
 	return nil
