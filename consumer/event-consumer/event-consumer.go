@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const SleepTimeSeconds = 5
+
 type Consumer struct {
 	fetcher   events.Fetcher
 	processor events.Processor
@@ -34,7 +36,7 @@ func (consumer Consumer) Start() error {
 		}
 
 		if len(eventsFetched) == 0 {
-			time.Sleep(1 * time.Second)
+			time.Sleep(SleepTimeSeconds * time.Second)
 			continue
 		}
 
